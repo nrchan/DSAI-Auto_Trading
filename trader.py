@@ -1,4 +1,32 @@
 import pandas as pd
+import tensorflow as tf
+import numpy as np
+
+WINDOW = 30
+
+def make_data(data, window):
+    x = []
+    y = []
+    for i in range(len(data) - window):
+        row = [[r] for r in data[i:i+window]]
+        x.append(row)
+        y.append(data[i+window][0]) #take only opening price
+    return np.array(x), np.array(y)
+
+def take_input(data, window):
+    x = []
+    start = len(data)-window
+    for i in range(window):
+        x.append([data[start+i]])
+    return np.array(x)
+
+
+def make_model():
+    model = tf.keras.layers.Sequential()
+    model.add(tf.keras.layers.InputLayer((4,1)))
+    model.add(tf.keras.layers.LSTM(64))
+    model.add(tf.keras.layers.Dense(1))
+    return model
 
 if __name__ == "__main__":
     # You should not modify this part.
@@ -12,8 +40,9 @@ if __name__ == "__main__":
 
     # The following part is an example.
     # You can modify it at will.
-    training_data = pd.read_csv(args.training, header = None)
-    print(training_data)
+    training_data = pd.read_csv(args.training, header = None).to_numpy()
+    train_x, train_y = make_data(training_data, WINDOW)
+    print(take_input(training_data, 3))
 
     """
     with open(args.output, "w") as output_file:
