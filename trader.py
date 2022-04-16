@@ -1,5 +1,7 @@
 import pandas as pd
 import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import InputLayer, LSTM, Dense
 import numpy as np
 
 WINDOW = 30
@@ -8,7 +10,7 @@ def make_data(data, window):
     x = []
     y = []
     for i in range(len(data) - window):
-        row = [[r] for r in data[i:i+window]]
+        row = [r for r in data[i:i+window]]
         x.append(row)
         y.append(data[i+window][0]) #take only opening price
     return np.array(x), np.array(y)
@@ -17,15 +19,17 @@ def take_input(data, window):
     x = []
     start = len(data)-window
     for i in range(window):
-        x.append([data[start+i]])
-    return np.array(x)
+        x.append(data[start+i])
+    return np.array([x])
 
 
 def make_model():
-    model = tf.keras.layers.Sequential()
-    model.add(tf.keras.layers.InputLayer((4,1)))
-    model.add(tf.keras.layers.LSTM(64))
-    model.add(tf.keras.layers.Dense(1))
+    model = Sequential()
+    model.add(InputLayer((30, 4)))
+    model.add(LSTM(128))
+    model.add(Dense(64, activation="relu"))
+    model.add(Dense(8, activation="relu"))
+    model.add(Dense(1))
     return model
 
 if __name__ == "__main__":
@@ -42,7 +46,26 @@ if __name__ == "__main__":
     # You can modify it at will.
     training_data = pd.read_csv(args.training, header = None).to_numpy()
     train_x, train_y = make_data(training_data, WINDOW)
-    print(take_input(training_data, 3))
+    
+    trader = make_model()
+
+    trader.compile(
+        loss = tf.keras.losses.MeanSquaredError(),
+        optimizer = tf.keras.optimizers.Adam(),
+        metrics = ["mse"]
+    )
+
+    cb = tf.keras.callbacks.EarlyStopping(
+        monitor='val_mse',
+        patience=10,
+        restore_best_weights=True
+    )
+
+    trader.fit(train_x, train_y, epochs = 100, validation_split=0.2, callbacks=cb)
+
+    test_x = take_input(training_data, WINDOW)
+    pred = trader.predict(test_x).flatten()
+    print(pred)
 
     """
     with open(args.output, "w") as output_file:
