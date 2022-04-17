@@ -3,8 +3,11 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import InputLayer, LSTM, Dense
 import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import mean_squared_error
 
 WINDOW = 30
+TESTING = True
 
 def make_data(data, window):
     x = []
@@ -63,17 +66,32 @@ if __name__ == "__main__":
 
     trader.fit(train_x, train_y, epochs = 100, validation_split=0.2, callbacks=cb)
 
-    test_x = take_input(training_data, WINDOW)
-    pred = trader.predict(test_x).flatten()
-    print(pred)
+    testing_data = pd.read_csv(args.testing, header = None).to_numpy()
 
-    """
-    with open(args.output, "w") as output_file:
+    if TESTING:
+        prediction = []
+        truth = []
+
         for row in testing_data:
-            # We will perform your action as the open price in the next day.
-            action = trader.predict_action(row)
-            output_file.write(action)
+            test_x = take_input(training_data, WINDOW)
+            pred = trader.predict(test_x).flatten().item()
+            training_data = np.concatenate([training_data, [row]], axis = 0)
+            prediction.append(pred)
+            truth.append(row[0])
 
-            # this is your option, you can leave it empty.
-            trader.re_training()
-    """
+        plt.plot(prediction, label = "Predition")
+        plt.plot(truth, label = "Truth")
+        plt.legend(loc = "best")
+        plt.show()
+        print(mean_squared_error(prediction, truth))
+    else:
+        """
+        with open(args.output, "w") as output_file:
+            for row in testing_data:
+                # We will perform your action as the open price in the next day.
+                action = trader.predict_action(row)
+                output_file.write(action)
+
+                # this is your option, you can leave it empty.
+                trader.re_training()
+        """
