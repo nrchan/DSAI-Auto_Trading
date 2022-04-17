@@ -49,9 +49,6 @@ if __name__ == "__main__":
     training_data = pd.read_csv(args.training, header = None).to_numpy()
     train_x, train_y = make_data(training_data, WINDOW)
 
-    plt.plot([a[0] for a in training_data])
-    plt.show()
-    """
     trader = make_model()
 
     trader.compile(
@@ -87,7 +84,7 @@ if __name__ == "__main__":
         plt.show()
         print(mean_squared_error(prediction, truth))
     else:
-        "" "
+        """
         with open(args.output, "w") as output_file:
             for row in testing_data:
                 # We will perform your action as the open price in the next day.
@@ -96,5 +93,4 @@ if __name__ == "__main__":
 
                 # this is your option, you can leave it empty.
                 trader.re_training()
-        "" "
-    """
+        """
