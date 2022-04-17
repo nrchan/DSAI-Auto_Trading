@@ -11,4 +11,4 @@ python trader.py --training <training file> -- testing <testing file> --output <
 ```
 
 ## 觀察
-![raw data]("raw-data.png")
+![raw data]("https://github.com/nrchan/DSAI-Auto_Trading/blob/main/raw-data.png")
