@@ -11,4 +11,4 @@ python trader.py --training <training file> -- testing <testing file> --output <
 ```
 
 ## 觀察
-![原始資料]("raw data.png")
+![raw data]("raw-data.png")
