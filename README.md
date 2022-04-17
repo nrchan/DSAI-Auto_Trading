@@ -46,3 +46,22 @@ def make_data(data, window):
         y.append(tn+window 的開盤價)
     return np.array(x), np.array(y)
 ```
+
+另外，還有預測時拿資料的方式：
+
+```python
+def take_input(data, window):
+    return np.array(data 從後面數來 window 筆資料)
+```
+
+### 訓練
+
+選擇了 lstm 當模型。考慮到之後的資料和現在的不一樣，所以嘗試了各種配置，最後選擇了一個還算穩定的配置，mse 通常都在 1 左右：
+
+![model](images/model.png)
+
+接著嘗試使用了各種 window size 看看。
+
+| Window Size | 結果 |
+| :---: | :---: |
+| 1 | <img src="images/prediction-1.png" width="200"> |

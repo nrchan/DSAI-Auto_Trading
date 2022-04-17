@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
 
 WINDOW = 30
+EPOCH = 100
 TESTING = True
 
 def make_data(data, window):
@@ -27,10 +28,11 @@ def take_input(data, window):
 
 def make_model():
     model = Sequential()
-    model.add(InputLayer((30, 4)))
+    model.add(InputLayer((WINDOW, 4)))
     model.add(LSTM(128))
-    model.add(Dense(64, activation="relu"))
-    model.add(Dense(8, activation="relu"))
+    model.add(Dense(64, activation="leaky_relu"))
+    model.add(Dense(16, activation="leaky_relu"))
+    model.add(Dense(8, activation="leaky_relu"))
     model.add(Dense(1))
     return model
 
@@ -57,13 +59,9 @@ if __name__ == "__main__":
         metrics = ["mse"]
     )
 
-    cb = tf.keras.callbacks.EarlyStopping(
-        monitor='val_mse',
-        patience=10,
-        restore_best_weights=True
-    )
+    cb = tf.keras.callbacks.EarlyStopping(monitor='val_mse', patience=15, restore_best_weights=True)
 
-    trader.fit(train_x, train_y, epochs = 100, validation_split=0.2, callbacks=cb)
+    trader.fit(train_x, train_y, epochs = EPOCH, validation_split=0.2, callbacks=cb)
 
     testing_data = pd.read_csv(args.testing, header = None).to_numpy()
 
