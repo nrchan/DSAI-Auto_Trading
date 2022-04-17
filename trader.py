@@ -9,7 +9,7 @@ from sklearn.metrics import mean_squared_error
 WINDOW = 30
 EPOCH = 100
 PREDICT_DAYS = 19
-TESTING = False
+TESTING = True
 
 def make_data(data, window):
     x = []
@@ -82,40 +82,36 @@ if __name__ == "__main__":
     cb = tf.keras.callbacks.EarlyStopping(monitor='val_mse', patience=15, restore_best_weights=True)
 
     trader.fit(train_x, train_y, epochs = EPOCH, validation_split=0.2, callbacks=cb)
-
+"""
     testing_data = pd.read_csv(args.testing, header = None).to_numpy()
 
-    if TESTING:
-        prediction = []
-        truth = []
+    count = 0
+    prediction = []
+    truth = []
 
+    with open(args.output, "w") as output_file:
         for row in testing_data:
+            if count == PREDICT_DAYS:
+                break
+            # We will perform your action as the open price in the next day.
             test_x = take_input(training_data, WINDOW)
             pred = trader.predict(test_x).flatten().item()
             training_data = np.concatenate([training_data, [row]], axis = 0)
+            action, CurrentStock = predict_action(pred, CurrentStock, CurrentPrice)
+            output_file.write("{}{}".format(action, "\n" if count < PREDICT_DAYS-1 else ""))
+            CurrentPrice = row[0]
             prediction.append(pred)
             truth.append(row[0])
 
+            # this is your option, you can leave it empty.
+            #trader.re_training()
+
+            count += 1
+
+    if TESTING:
         plt.plot(prediction, label = "Predition")
         plt.plot(truth, label = "Truth")
         plt.legend(loc = "best")
         plt.show()
         print(mean_squared_error(prediction, truth))
-    else:
-        count = 0
-        with open(args.output, "w") as output_file:
-            for row in testing_data:
-                if count == PREDICT_DAYS:
-                    break
-                # We will perform your action as the open price in the next day.
-                test_x = take_input(training_data, WINDOW)
-                pred = trader.predict(test_x).flatten().item()
-                training_data = np.concatenate([training_data, [row]], axis = 0)
-                action, CurrentStock = predict_action(pred, CurrentStock, CurrentPrice)
-                output_file.write("{}{}".format(action, "\n" if count < PREDICT_DAYS-1 else ""))
-                CurrentPrice = row[0]
-
-                # this is your option, you can leave it empty.
-                #trader.re_training()
-
-                count += 1
+"""
