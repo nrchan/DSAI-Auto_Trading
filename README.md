@@ -64,8 +64,10 @@ def take_input(data, window):
 
 | Window Size | 結果 |
 | :---: | :---: |
-| 1     | <img src="images/prediction-1.png" width="300"> |
-| 5     | <img src="images/prediction-5.png" width="300"> |
-| 15    | <img src="images/prediction-15.png" width="300"> |
-| 30    | <img src="images/prediction-30.png" width="300"> |
+| 1     | <img src="images/prediction-1.png" width="300">   |
+| 5     | <img src="images/prediction-5.png" width="300">   |
+| 15    | <img src="images/prediction-15.png" width="300">  |
+| 30    | <img src="images/prediction-30.png" width="300">  |
 | 100   | <img src="images/prediction-100.png" width="300"> |
+| 500   | <img src="images/prediction-500.png" width="300"> |
+
