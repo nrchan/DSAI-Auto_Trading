@@ -8,7 +8,8 @@ from sklearn.metrics import mean_squared_error
 
 WINDOW = 30
 EPOCH = 100
-TESTING = True
+PREDICT_DAYS = 19
+TESTING = False
 
 def make_data(data, window):
     x = []
@@ -25,6 +26,22 @@ def take_input(data, window):
     for i in range(window):
         x.append(data[start+i])
     return np.array([x])
+
+def predict_action(pred, CurrentStock, CurrentPrice):
+    if pred > CurrentPrice:
+        if CurrentStock == 1:
+            return 0, 1
+        elif CurrentStock == 0:
+            return 1, 1
+        else:
+            return 1, 0
+    else:
+        if CurrentStock == 1:
+            return -1, 0
+        elif CurrentStock == 0:
+            return -1, -1
+        else:
+            return 0, -1
 
 def make_model():
     model = Sequential()
@@ -50,6 +67,9 @@ if __name__ == "__main__":
     # You can modify it at will.
     training_data = pd.read_csv(args.training, header = None).to_numpy()
     train_x, train_y = make_data(training_data, WINDOW)
+
+    CurrentPrice = training_data[-1][0]
+    CurrentStock = 0
 
     trader = make_model()
 
@@ -82,13 +102,20 @@ if __name__ == "__main__":
         plt.show()
         print(mean_squared_error(prediction, truth))
     else:
-        """
+        count = 0
         with open(args.output, "w") as output_file:
             for row in testing_data:
+                if count == PREDICT_DAYS:
+                    break
                 # We will perform your action as the open price in the next day.
-                action = trader.predict_action(row)
-                output_file.write(action)
+                test_x = take_input(training_data, WINDOW)
+                pred = trader.predict(test_x).flatten().item()
+                training_data = np.concatenate([training_data, [row]], axis = 0)
+                action, CurrentStock = predict_action(pred, CurrentStock, CurrentPrice)
+                output_file.write("{}{}".format(action, "\n" if count < PREDICT_DAYS-1 else ""))
+                CurrentPrice = row[0]
 
                 # this is your option, you can leave it empty.
-                trader.re_training()
-        """
+                #trader.re_training()
+
+                count += 1

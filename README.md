@@ -17,13 +17,13 @@ python trader.py --training <training file> -- testing <testing file> --output <
 
 先把原始的資料畫出來看看。
 
-<img src="images/raw-data.png" width="500">
+<img src="images/raw-data.png" width="400">
 
 看起來，一個大一點的週期可以超過 100 天。
 但是因為我們的目標只要 20 天，如果包含了太以前的資料再預測，可能會跟上次一樣反而影響到預測結果。
 所以目前猜測，之後的模型在預測的當下不用看到太以前的資料。
 
-<img src="images/raw-data-20.png" width="500">
+<img src="images/raw-data-20.png" width="400">
 
 實際上把隨機某 20 天的資料畫出來，可以發現在短線內實在是沒有什麼肉眼可見的規律。
 
@@ -58,7 +58,7 @@ def take_input(data, window):
 
 選擇了 lstm 當模型。考慮到之後的資料和現在的不一樣，所以嘗試了各種配置，最後選擇了一個還算穩定的配置，mse 通常都在 1 左右：
 
-<img src="images/model.png" width="500">
+<img src="images/model.png" width="400">
 
 接著嘗試使用了各種 window size 看看。
 
@@ -71,3 +71,5 @@ def take_input(data, window):
 | 100   | <img src="images/prediction-100.png" width="300"> |
 | 500   | <img src="images/prediction-500.png" width="300"> |
 
+除了 1 太極端以外，其實每個 window size 的表現都差不多...。
+因為我們不太需要預測到精確的數字，只是需要一個趨勢就可以，所以就選了還說得過去的 30 當 window size。
