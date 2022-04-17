@@ -46,11 +46,10 @@ def predict_action(pred, CurrentStock, CurrentPrice):
 def make_model():
     model = Sequential()
     model.add(InputLayer((WINDOW, 4)))
-    model.add(LSTM(256))
-    model.add(Dense(128, activation="leaky_relu"))
+    model.add(LSTM(128))
     model.add(Dense(64, activation="leaky_relu"))
-    model.add(Dense(32, activation="leaky_relu"))
-    model.add(Dense(4))
+    model.add(Dense(8, activation="leaky_relu"))
+    model.add(Dense(1))
     return model
 
 if __name__ == "__main__":
@@ -100,11 +99,13 @@ if __name__ == "__main__":
             # Predict
             pred = trader.predict(test_x).flatten()
 
+            """
             # Predict d+2
             training_data = np.concatenate([training_data, [pred]], axis = 0)
             test_x2 = take_input(training_data, WINDOW)
             pred2 = trader.predict(test_x2).flatten()
             training_data = training_data[:-1]
+            """
 
             # Put new into train data
             training_data = np.concatenate([training_data, [row]], axis = 0)
@@ -116,7 +117,7 @@ if __name__ == "__main__":
             # Record
             CurrentPrice = row[0]
             prediction.append(pred)
-            prediction2.append(pred2)
+            #prediction2.append(pred2)
             truth.append(row[0])
 
             #trader.re_training()
@@ -127,7 +128,7 @@ if __name__ == "__main__":
         opening = [p[0] for p in prediction]
         opening2 = [p[0] for p in prediction2]
         plt.plot(opening, label = "Predition")
-        plt.plot(list(range(1, PREDICT_DAYS)),opening2[:-1], label = "Predition")
+        #plt.plot(list(range(1, PREDICT_DAYS)),opening2[:-1], label = "Predition D+2")
         plt.plot(truth, label = "Truth")
         plt.legend(loc = "best")
         plt.show()
