@@ -71,5 +71,5 @@ def take_input(data, window):
 | 100   | <img src="images/prediction-100.png" width="300"> |
 | 500   | <img src="images/prediction-500.png" width="300"> |
 
-除了 1 太極端以外，其實每個 window size 的表現都差不多...。
-因為我們不太需要預測到精確的數字，只是需要一個趨勢就可以，所以就選了還說得過去的 30 當 window size。
+其實每個 window size 的表現都差不多...。
+因為之後的 testing data 根本沒有那麼多資料可以用，所以乾脆選 window size = 1。
