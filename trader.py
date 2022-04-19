@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
 
-WINDOW = 1
+WINDOW = 2
 EPOCH = 100
 PREDICT_DAYS = 19
 TESTING = True
