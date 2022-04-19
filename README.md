@@ -13,7 +13,7 @@ python trader.py --training <training file> -- testing <testing file> --output <
 
 ## 想法
 
-### 小觀察
+### :large_orange_diamond: 小觀察
 
 先把原始的資料畫出來看看。
 
@@ -35,7 +35,7 @@ python trader.py --training <training file> -- testing <testing file> --output <
 [t2, t3, ... , tn+2] => [tn+3]
 ```
 
-### 整理資料
+### :large_orange_diamond: 整理資料
 
 既然決定了輸入輸出的形式，就來將資料變成到時候可以用的樣子：
 
@@ -56,7 +56,7 @@ def take_input(data, window):
     return np.array(data 從後面數來 window 筆資料)
 ```
 
-### 訓練
+### :large_orange_diamond: 訓練
 
 選擇了 lstm 當模型。考慮到之後的資料和現在的不一樣，所以嘗試了各種配置，最後選擇了一個還算穩定的配置，mse 通常都在 1 左右：
 
@@ -77,7 +77,7 @@ def take_input(data, window):
 
 因為之後的 testing data 根本沒有那麼多資料可以用，所以選了小一點的 window size。
 
-### 決策邏輯
+### :large_orange_diamond: 決策邏輯
 
 在有了預測值之後，發現預測到的數值無論模型、window 或資料量的大小，都會有最多一天的延遲。~~我十分懷疑這個東西的準確性和可靠度。~~
 但無論如何，還是需要一個 output 的邏輯。
@@ -89,7 +89,7 @@ def take_input(data, window):
 
 其實感覺有點像猜猜樂，特別是預測不到轉折點很容易就賠錢了><。
 
-### 測試
+### :large_orange_diamond: 測試
 
 實際測試了不同的 window size，實在是不忍直視 :)。
 
