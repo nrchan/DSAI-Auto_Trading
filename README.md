@@ -39,6 +39,8 @@ python trader.py --training <training file> -- testing <testing file> --output <
 
 既然決定了輸入輸出的形式，就來將資料變成到時候可以用的樣子：
 
+除了原本的資料，還另外算了(今天/昨天)的漲跌比例。
+
 ```python
 def make_data(data, window):
     for data 中每一組 window+1 長度的連續資料 [tn, tn+1, ... , tn+window]:
@@ -72,4 +74,17 @@ def take_input(data, window):
 | 500   | <img src="images/prediction-500.png" width="300"> |
 
 其實每個 window size 的表現都差不多...。
+
 因為之後的 testing data 根本沒有那麼多資料可以用，所以乾脆選 window size = 1。
+
+### 決策邏輯
+
+在有了預測值之後，發現預測到的數值無論模型、window 或資料量的大小，都會有最多一天的延遲。~~我十分懷疑這個東西的準確性和可靠度。~~
+但無論如何，還是需要一個 output 的邏輯。
+
+因為我的可信資料不夠多，所以採取了一個保守(?)又單純的方法：
+
+1. 相信預測值，如果預測會漲或跌就買或賣，同時記錄價格。
+2. 之後，如果有預測會賺錢就賣掉或買回來，不然就不要操作。
+
+其實感覺有點像猜猜樂，特別是預測不到轉折點很容易就賠錢了><。
