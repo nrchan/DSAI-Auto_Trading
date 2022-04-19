@@ -12,7 +12,7 @@ from sklearn.metrics import mean_squared_error
 WINDOW = 2
 EPOCH = 100
 PREDICT_DAYS = 19
-TESTING = True
+TESTING = False
 HOLDING_PRICE = 0
 
 def make_data(data, window, step=1, rshift=0):
